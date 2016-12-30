@@ -1,0 +1,40 @@
+{
+  "name": "basics",
+  "version": "0.0.1",
+  "description": "ES6 Modules that do exactly what they need to and nothing more.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamwdraper/basics.git"
+  },
+  "author": "Adam Draper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamwdraper/basics/issues"
+  },
+  "homepage": "https://github.com/adamwdraper/basics#readme",
+  "jshintConfig": {
+    "esversion": 6,
+    "loopfunc": true,
+    "node": true,
+    "browser": true,
+    "curly": true,
+    "devel": false,
+    "eqeqeq": true,
+    "eqnull": true,
+    "newcap": true,
+    "noarg": true,
+    "undef": true,
+    "sub": true,
+    "quotmark": "single",
+    "globals": {
+      "define": true
+    }
+  }
+}

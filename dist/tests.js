@@ -132,6 +132,33 @@ describe('Router', function() {
     });
   });
 
+  describe('routes', function() {
+    it('should go back', function(done) {
+      const routes = {
+        one: '/one',
+        two: '/two/2'
+      };
+
+      for (let route in routes) {
+        sinon.spy(router.callbacks, route);
+      }
+
+      router.start();
+
+      for (let route in routes) {
+        router.go(routes[route]);
+      }
+
+      router.back();
+
+      setTimeout(() => {
+        expect(router.callbacks.one.calledTwice).to.be.true;
+
+        done();
+      }, 1000)
+    });
+  });
+
   describe('fragments', function() {
     it('should generate fragment path', function() {
       const paths = {
@@ -196,6 +223,7 @@ class Router {
     };
     this._routes = [];
 
+    this.route = null;
     this.root = options.root || '/';
     this.routes = options.routes || {
       '*': 'action'
@@ -286,6 +314,8 @@ class Router {
 
         callback = this.callbacks[route.callback];
 
+        this.route = route;
+
         break;
       }
     }
@@ -310,10 +340,10 @@ class Router {
     };
   }
 
-  go(fragment) {
+  go(fragment, replace = false) {
     const path = this._createPath(fragment);
 
-    window.history.pushState({}, '', path);
+    window.history[replace ? 'replaceState' : 'pushState']({}, '', path);
 
     this._route();
   }

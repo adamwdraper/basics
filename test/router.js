@@ -58,6 +58,33 @@ describe('Router', function() {
     });
   });
 
+  describe('routes', function() {
+    it('should go back', function(done) {
+      const routes = {
+        one: '/one',
+        two: '/two/2'
+      };
+
+      for (let route in routes) {
+        sinon.spy(router.callbacks, route);
+      }
+
+      router.start();
+
+      for (let route in routes) {
+        router.go(routes[route]);
+      }
+
+      router.back();
+
+      setTimeout(() => {
+        expect(router.callbacks.one.calledTwice).to.be.true;
+
+        done();
+      }, 1000)
+    });
+  });
+
   describe('fragments', function() {
     it('should generate fragment path', function() {
       const paths = {

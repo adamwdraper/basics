@@ -11,6 +11,7 @@ export default class Router {
     };
     this._routes = [];
 
+    this.route = null;
     this.root = options.root || '/';
     this.routes = options.routes || {
       '*': 'action'
@@ -101,6 +102,8 @@ export default class Router {
 
         callback = this.callbacks[route.callback];
 
+        this.route = route;
+
         break;
       }
     }
@@ -125,10 +128,10 @@ export default class Router {
     };
   }
 
-  go(fragment) {
+  go(fragment, replace = false) {
     const path = this._createPath(fragment);
 
-    window.history.pushState({}, '', path);
+    window.history[replace ? 'replaceState' : 'pushState']({}, '', path);
 
     this._route();
   }

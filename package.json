@@ -1,0 +1,63 @@
+{
+  "name": "basics",
+  "version": "0.0.1",
+  "description": "ES6 Modules that do exactly what they need to and nothing more.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "webpack",
+    "test": "webpack ; karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamwdraper/basics.git"
+  },
+  "author": "Adam Draper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamwdraper/basics/issues"
+  },
+  "homepage": "https://github.com/adamwdraper/basics#readme",
+  "jshintConfig": {
+    "esversion": 6,
+    "loopfunc": true,
+    "node": true,
+    "browser": true,
+    "curly": true,
+    "devel": false,
+    "eqeqeq": true,
+    "eqnull": true,
+    "newcap": true,
+    "noarg": true,
+    "undef": true,
+    "sub": true,
+    "quotmark": "single",
+    "globals": {
+      "define": true,
+      "describe": true,
+      "before": true,
+      "beforeEach": true,
+      "after": true,
+      "afterEach": true,
+      "it": true,
+      "expect": true,
+      "sinon": true
+    }
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "karma": "^1.3.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-mocha": "^1.3.0",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-sinon": "^1.0.5",
+    "karma-webpack": "^1.8.1",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7",
+    "webpack": "^2.2.0-rc.3"
+  }
+}

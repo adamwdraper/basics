@@ -12,8 +12,14 @@ Example Usage:
 import Router from './src/router';
 
 const router = new Router({
-  // optional root for the uri
+  // optional: root for the uri
   root: '/things',
+
+  // optional: setup function to be called on construction
+  setup() {
+    // do some work here
+  },
+
   // example available routes
   routes: {
     '/': 'home',
@@ -23,6 +29,7 @@ const router = new Router({
     '/^\/f/': 'four',
     '*': 'notFound'
   },
+  
   // functions called on matched routes
   callbacks: {
     home() {},
@@ -37,11 +44,11 @@ const router = new Router({
 // load first route based on url
 router.start();  
 
-// navigate to route and update uri with pushState
+// navigate to route and update url with pushState
 router.go('/two');
 
 
-// navigate to route and update uri with replaceState
+// navigate to route and update url with replaceState
 router.go('/two/2', true);
 
 // navigate back in browser history

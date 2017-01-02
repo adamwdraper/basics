@@ -24,7 +24,9 @@ module.exports = function(config) {
       'progress'
     ],
     browsers: [
-      'Chrome'
+      'Chrome',
+      'Safari',
+      'Firefox'
     ],
     singleRun: true
   });

@@ -1,7 +1,10 @@
 module.exports = {
-  entry: './src/tests.js',
+  entry: {
+    tests: './src/tests.js',
+    router: './src/router.js'
+  },
   output: {
-    filename: 'tests.js',
+    filename: '[name].js',
     path: './dist'
   }
 };

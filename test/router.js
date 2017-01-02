@@ -1,17 +1,10 @@
+import Router from '../src/router';
+
 describe('Router', function() {
   let router;
 
   beforeEach(function() {
-    class TestRouter extends Router {
-      home() {}
-      one() {}
-      two() {}
-      three() {}
-      four() {}
-      notFound() {}
-    }
-
-    router = new TestRouter({
+    router = new Router({
       root: '/mocha',
       routes: {
         '/': 'home',

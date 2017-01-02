@@ -1,4 +1,4 @@
-class Router {
+export default class Router {
   constructor(options = {}) {
     this._regExp = {
       default: /^[*]$/,
@@ -16,9 +16,7 @@ class Router {
       '*': 'action'
     };
     this.callbacks = options.callbacks || {
-      action() {
-
-      }
+      action() {}
     };
 
     this._processRoutes();
@@ -139,5 +137,3 @@ class Router {
     window.history.back();
   }
 }
-
-export default Router;

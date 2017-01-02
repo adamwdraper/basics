@@ -5,7 +5,7 @@ describe('Router', function() {
 
   beforeEach(function() {
     router = new Router({
-      root: '/mocha',
+      root: '/debug.html',
       routes: {
         '/': 'home',
         '/one': 'one',
@@ -36,12 +36,25 @@ describe('Router', function() {
   });
 
   describe('routes', function() {
-    it('should route to home', function() {
-      sinon.spy(router.callbacks, 'home');
+    it('should call routes', function() {
+      const routes = {
+        one: '/one',
+        two: '/two/2',
+        four: '/f',
+        notFound: 'ljkflakjflkjsafe'
+      };
+
+      for (let route in routes) {
+        sinon.spy(router.callbacks, route);
+      }
 
       router.start();
 
-      expect(router.callbacks.home.calledOnce).to.be.true;
+      for (let route in routes) {
+        router.go(routes[route]);
+
+        expect(router.callbacks[route].called).to.be.true;
+      }
     });
   });
 
@@ -59,6 +72,12 @@ describe('Router', function() {
         '/path': '/root/path',
         '/path/path2': '/root/path/path2'
       };
+      const rootExtPaths = {
+        '/': '/root.html',
+        'path': '/root.html/path',
+        '/path': '/root.html/path',
+        '/path/path2': '/root.html/path/path2'
+      };
 
       // test with / as root
       router.root = '/';
@@ -69,8 +88,16 @@ describe('Router', function() {
 
       // test with a root
       router.root = '/root';
+
       for (let path in rootPaths) {
         expect(router._createPath(path)).to.equal(rootPaths[path]);
+      }
+
+      // test with a root.html
+      router.root = '/root.html';
+
+      for (let path in rootExtPaths) {
+        expect(router._createPath(path)).to.equal(rootExtPaths[path]);
       }
     });
   });

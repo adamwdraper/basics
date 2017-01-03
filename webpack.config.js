@@ -1,7 +1,8 @@
 module.exports = {
   entry: {
-    tests: './src/tests.js',
-    router: './src/router.js'
+    ajax: './src/ajax.js',
+    router: './src/router.js',
+    tests: './src/tests.js'
   },
   output: {
     filename: '[name].js',

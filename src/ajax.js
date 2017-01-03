@@ -70,4 +70,16 @@ export default class Ajax {
 
     return this.request(options);
   }
+
+  put(options) {
+    options.method = 'PUT';
+
+    return this.request(options);
+  }
+
+  delete(options) {
+    options.method = 'DELETE';
+
+    return this.request(options);
+  }
 }

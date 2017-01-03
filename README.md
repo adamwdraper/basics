@@ -55,3 +55,50 @@ router.go('/two/2', true);
 router.back();
 
 ```
+
+### Ajax
+Promised based XMLHttpRequests. Has methods for `GET`, `POST`, `PUT`, and `DELETE`. Sends and receives `application/json`.
+
+Example Usage:
+
+```
+import Ajax from '../src/ajax';
+
+ajax = new Ajax();
+
+// make a get request
+ajax.get('/resource')
+    .then((results) => {
+      // do some work with the results
+    }, (error) => {
+      console.log(error);
+    });
+
+// make a get request with data
+ajax.get({
+    url: '/songs',
+    data: {
+      query: 'Lateralus',
+      offset: 0,
+      limit: 5
+    }
+  })
+    .then((results) => {
+      // do some work with the results
+    }, (error) => {
+      console.log(error);
+    });
+    
+// make a post request
+ajax.post({
+    url: '/create',
+    data: {
+      name: 'Maynard'
+    }
+  })
+    .then((results) => {
+      // do some work with the results
+    }, (error) => {
+      console.log(error);
+    });
+```

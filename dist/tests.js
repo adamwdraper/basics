@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,138 +71,94 @@
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_router__ = __webpack_require__(1);
+Object.defineProperty(exports, "__esModule", { value: true });
+class Ajax {
+  constructor() {
 
+  }
 
-describe('Router', function() {
-  let router;
+  request(options) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      let { data, method, url, headers } = options;
 
-  beforeEach(function() {
-    router = new __WEBPACK_IMPORTED_MODULE_0__src_router__["a" /* default */]({
-      root: '/debug.html',
-      routes: {
-        '/': 'home',
-        '/one': 'one',
-        '/two(/:id)': 'two',
-        '/three': 'three',
-        '/^\/f/': 'four',
-        '*': 'notFound'
-      },
-      callbacks: {
-        home() {},
-        one() {},
-        two() {},
-        three() {},
-        four() {},
-        notFound() {}
+      // format data if it is an object
+      if (data && typeof data === 'object') {
+        switch (method) {
+          case 'GET':
+            url += '?' + Object.keys(data).map(function (key) {
+              return `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`;
+            }).join('&');
+
+            data = null;
+
+            break;
+          default:
+            data = JSON.stringify(data);
+        }
       }
-    });
-  });
 
-  afterEach(function() {
-    router = null;
-  });
+      xhr.open(method, url);
 
-  describe('construction', function() {
-    it('should construct', function() {
-      expect(router).to.be.an('object');
-    });
-  });
-
-  describe('routes', function() {
-    it('should call routes', function() {
-      const routes = {
-        one: '/one',
-        two: '/two/2',
-        four: '/f',
-        notFound: 'ljkflakjflkjsafe'
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(JSON.parse(xhr.responseText));
+        } else {
+          reject({
+            status: xhr.status,
+            statusText: xhr.statusText
+          });
+        }
       };
 
-      for (let route in routes) {
-        sinon.spy(router.callbacks, route);
+      xhr.onerror = () => {
+        reject({
+          status: xhr.status,
+          statusText: xhr.statusText
+        });
+      };
+
+      // send json content on non GET calls
+      if (method !== 'GET') {
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
       }
 
-      router.start();
-
-      for (let route in routes) {
-        router.go(routes[route]);
-
-        expect(router.callbacks[route].called).to.be.true;
-      }
+      xhr.send(data);
     });
-  });
+  }
 
-  describe('routes', function() {
-    it('should go back', function(done) {
-      const routes = {
-        one: '/one',
-        two: '/two/2'
+  get(options) {
+    if (typeof options === 'string') {
+      options = {
+        url: options
       };
+    }
 
-      for (let route in routes) {
-        sinon.spy(router.callbacks, route);
-      }
+    options.method = 'GET';
 
-      router.start();
+    return this.request(options);
+  }
 
-      for (let route in routes) {
-        router.go(routes[route]);
-      }
+  post(options) {
+    options.method = 'POST';
 
-      router.back();
+    return this.request(options);
+  }
 
-      setTimeout(() => {
-        expect(router.callbacks.one.calledTwice).to.be.true;
+  put(options) {
+    options.method = 'PUT';
 
-        done();
-      }, 1000)
-    });
-  });
+    return this.request(options);
+  }
 
-  describe('fragments', function() {
-    it('should generate fragment path', function() {
-      const paths = {
-        '/': '/',
-        'path': '/path',
-        '/path': '/path',
-        '/path/path2': '/path/path2'
-      };
-      const rootPaths = {
-        '/': '/root',
-        'path': '/root/path',
-        '/path': '/root/path',
-        '/path/path2': '/root/path/path2'
-      };
-      const rootExtPaths = {
-        '/': '/root.html',
-        'path': '/root.html/path',
-        '/path': '/root.html/path',
-        '/path/path2': '/root.html/path/path2'
-      };
+  delete(options) {
+    options.method = 'DELETE';
 
-      // test with / as root
-      router.root = '/';
+    return this.request(options);
+  }
+}
+/* harmony export (immutable) */ exports["default"] = Ajax;
 
-      for (let path in paths) {
-        expect(router._createPath(path)).to.equal(paths[path]);
-      }
-
-      // test with a root
-      router.root = '/root';
-
-      for (let path in rootPaths) {
-        expect(router._createPath(path)).to.equal(rootPaths[path]);
-      }
-
-      // test with a root.html
-      router.root = '/root.html';
-
-      for (let path in rootExtPaths) {
-        expect(router._createPath(path)).to.equal(rootExtPaths[path]);
-      }
-    });
-  });
-});
 
 
 /***/ },
@@ -210,6 +166,7 @@ describe('Router', function() {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Router {
   constructor(options = {}) {
     this._regExp = {
@@ -352,7 +309,7 @@ class Router {
     window.history.back();
   }
 }
-/* harmony export (immutable) */ exports["a"] = Router;
+/* harmony export (immutable) */ exports["default"] = Router;
 
 
 
@@ -361,8 +318,317 @@ class Router {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_ajax__ = __webpack_require__(0);
+
+
+describe('Ajax', function() {
+  let xhr;
+  let requests;
+  let ajax;
+
+  beforeEach(function() {
+    ajax = new __WEBPACK_IMPORTED_MODULE_0__src_ajax__["default"]();
+
+    xhr = sinon.useFakeXMLHttpRequest();
+    requests = sinon.requests = [];
+
+    xhr.onCreate = function(xhr) {
+        requests.push(xhr);
+    };
+  });
+
+  afterEach(function() {
+    ajax = null;
+
+    xhr.restore();
+  });
+
+  describe('construction', function() {
+    it('should construct', function() {
+      expect(ajax).to.be.an('object');
+    });
+  });
+
+  describe('requests', function() {
+    it('should make a GET request', function() {
+      const url = '/test/url?id=12345';
+      const responseText = '{"id":12345,"name":"name"}';
+      const success = (data) => {
+        response = data;
+      };
+      const spy = sinon.spy(success);
+      let response;
+
+      ajax.get(url)
+        .then(success)
+        .then(() => {
+          expect(success.called).to.be.true;
+          expect(response).to.be.an('object');
+          expect(JSON.stringify(response)).to.equal(responseText);
+        });
+
+      expect(requests.length).to.equal(1);
+      expect(requests[0].url).to.equal(url);
+      expect(requests[0].method).to.equal('GET');
+
+	    requests[0].respond(200, {
+        'Content-Type': 'application/json'
+      }, responseText);
+    });
+
+    it('should make a POST request', function() {
+      const url = '/test/url';
+      const responseText = '{"id":12345,"name":"name"}';
+      const data = {
+        id: 12345
+      };
+      const success = (data) => {
+        response = data;
+      };
+      const spy = sinon.spy(success);
+      let response;
+
+      ajax.post({
+        url,
+        data
+      })
+        .then(success)
+        .then(() => {
+          expect(success.called).to.be.true;
+          expect(response).to.be.an('object');
+          expect(JSON.stringify(response)).to.equal(responseText);
+        });
+
+      expect(requests.length).to.equal(1);
+      expect(requests[0].url).to.equal(url);
+      expect(requests[0].method).to.equal('POST');
+      expect(JSON.stringify(requests[0].requestHeaders)).to.equal('{"Content-Type":"application/json;charset=utf-8"}');
+      expect(requests[0].requestBody).to.equal(JSON.stringify(data));
+
+	    requests[0].respond(200, {
+        'Content-Type': 'application/json'
+      }, responseText);
+    });
+
+    it('should make a DELETE request', function() {
+      const url = '/test/url';
+      const responseText = '{"id":12345,"name":"name"}';
+      const data = {
+        id: 12345
+      };
+      const success = (data) => {
+        response = data;
+      };
+      const spy = sinon.spy(success);
+      let response;
+
+      ajax.delete({
+        url,
+        data
+      })
+        .then(success)
+        .then(() => {
+          expect(success.called).to.be.true;
+          expect(response).to.be.an('object');
+          expect(JSON.stringify(response)).to.equal(responseText);
+        });
+
+      expect(requests.length).to.equal(1);
+      expect(requests[0].url).to.equal(url);
+      expect(requests[0].method).to.equal('DELETE');
+      expect(JSON.stringify(requests[0].requestHeaders)).to.equal('{"Content-Type":"application/json;charset=utf-8"}');
+      expect(requests[0].requestBody).to.equal(JSON.stringify(data));
+
+	    requests[0].respond(200, {
+        'Content-Type': 'application/json'
+      }, responseText);
+    });
+
+    it('should make a PUT request', function() {
+      const url = '/test/url';
+      const responseText = '{"id":12345,"name":"name"}';
+      const data = {
+        id: 12345
+      };
+      const success = (data) => {
+        response = data;
+      };
+      const spy = sinon.spy(success);
+      let response;
+
+      ajax.put({
+        url,
+        data
+      })
+        .then(success)
+        .then(() => {
+          expect(success.called).to.be.true;
+          expect(response).to.be.an('object');
+          expect(JSON.stringify(response)).to.equal(responseText);
+        });
+
+      expect(requests.length).to.equal(1);
+      expect(requests[0].url).to.equal(url);
+      expect(requests[0].method).to.equal('PUT');
+      expect(JSON.stringify(requests[0].requestHeaders)).to.equal('{"Content-Type":"application/json;charset=utf-8"}');
+      expect(requests[0].requestBody).to.equal(JSON.stringify(data));
+
+	    requests[0].respond(200, {
+        'Content-Type': 'application/json'
+      }, responseText);
+    });
+  });
+});
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_router__ = __webpack_require__(1);
+
+
+describe('Router', function() {
+  let router;
+
+  beforeEach(function() {
+    router = new __WEBPACK_IMPORTED_MODULE_0__src_router__["default"]({
+      root: '/debug.html',
+      routes: {
+        '/': 'home',
+        '/one': 'one',
+        '/two(/:id)': 'two',
+        '/three': 'three',
+        '/^\/f/': 'four',
+        '*': 'notFound'
+      },
+      callbacks: {
+        home() {},
+        one() {},
+        two() {},
+        three() {},
+        four() {},
+        notFound() {}
+      }
+    });
+  });
+
+  afterEach(function() {
+    router = null;
+  });
+
+  describe('construction', function() {
+    it('should construct', function() {
+      expect(router).to.be.an('object');
+    });
+  });
+
+  describe('routes', function() {
+    it('should call routes', function() {
+      const routes = {
+        one: '/one',
+        two: '/two/2',
+        four: '/f',
+        notFound: 'ljkflakjflkjsafe'
+      };
+
+      for (let route in routes) {
+        sinon.spy(router.callbacks, route);
+      }
+
+      router.start();
+
+      for (let route in routes) {
+        router.go(routes[route]);
+
+        expect(router.callbacks[route].called).to.be.true;
+      }
+    });
+  });
+
+  describe('routes', function() {
+    it('should go back', function(done) {
+      const routes = {
+        one: '/one',
+        two: '/two/2'
+      };
+
+      for (let route in routes) {
+        sinon.spy(router.callbacks, route);
+      }
+
+      router.start();
+
+      for (let route in routes) {
+        router.go(routes[route]);
+      }
+
+      router.back();
+
+      setTimeout(() => {
+        expect(router.callbacks.one.calledTwice).to.be.true;
+
+        done();
+      }, 1000)
+    });
+  });
+
+  describe('fragments', function() {
+    it('should generate fragment path', function() {
+      const paths = {
+        '/': '/',
+        'path': '/path',
+        '/path': '/path',
+        '/path/path2': '/path/path2'
+      };
+      const rootPaths = {
+        '/': '/root',
+        'path': '/root/path',
+        '/path': '/root/path',
+        '/path/path2': '/root/path/path2'
+      };
+      const rootExtPaths = {
+        '/': '/root.html',
+        'path': '/root.html/path',
+        '/path': '/root.html/path',
+        '/path/path2': '/root.html/path/path2'
+      };
+
+      // test with / as root
+      router.root = '/';
+
+      for (let path in paths) {
+        expect(router._createPath(path)).to.equal(paths[path]);
+      }
+
+      // test with a root
+      router.root = '/root';
+
+      for (let path in rootPaths) {
+        expect(router._createPath(path)).to.equal(rootPaths[path]);
+      }
+
+      // test with a root.html
+      router.root = '/root.html';
+
+      for (let path in rootExtPaths) {
+        expect(router._createPath(path)).to.equal(rootExtPaths[path]);
+      }
+    });
+  });
+});
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__test_router__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__test_router__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__test_ajax__ = __webpack_require__(2);
+
 
 
 
